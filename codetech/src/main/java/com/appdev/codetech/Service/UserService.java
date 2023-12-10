@@ -52,11 +52,12 @@ public class UserService {
         try {
             user = urepo.findById(userid).get();
             user.setUsername(newUserEntityDetails.getUsername());
+            user.setEmail(newUserEntityDetails.getEmail());
             user.setPassword(newUserEntityDetails.getPassword());
             user.setFirstname(newUserEntityDetails.getFirstname());
             user.setLastname(newUserEntityDetails.getLastname());
             user.setRole(newUserEntityDetails.getRole());
-            user.setIsDeleted(newUserEntityDetails.getIsDelete());
+            user.setIsDelete(newUserEntityDetails.getIsDelete());
         } catch (NoSuchElementException ex) {
             throw new NoSuchElementException("User: " + userid + " does not exist!");
         }
@@ -70,11 +71,12 @@ public class UserService {
         try {
             user = urepo.findById(userid).get();
             user.setUsername(null);
+            user.setEmail(null);
             user.setPassword(null);
             user.setFirstname(null);
             user.setLastname(null);
             user.setRole(null);
-            user.setIsDeleted(true);
+            user.setIsDelete(true);
         } catch (NoSuchElementException ex) {
             throw new NoSuchElementException("User: " + userid + " does not exist!");
         }
@@ -128,4 +130,9 @@ public class UserService {
 
         return msg;
     }
+
+    public UserEntity getUserById(int userId) {
+        return urepo.findById(userId).orElse(null);
+    }
+
 }

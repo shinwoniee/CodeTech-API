@@ -97,6 +97,22 @@ public class UserController {
         return userv.deleteUser(userid);
     }
 
+    @GetMapping("/getUserById/{userId}")
+public ResponseEntity<UserEntity> getUserById(@PathVariable int userId) {
+    try {
+        UserEntity user = userv.getUserById(userId);
+        if (user != null) {
+            return ResponseEntity.ok(user);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    } catch (Exception e) {
+        // Log the exception for debugging purposes
+        e.printStackTrace();
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    }
+}
+
     @GetMapping("/print")
     public String printHello() {
         return "hellooo";

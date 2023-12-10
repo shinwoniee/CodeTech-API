@@ -25,17 +25,15 @@ public class UserEntity {
     private String lastname;
     @Column(name = "role")
     private String role;
-    @Column(name = "isdeleted")
-    private boolean isdeleted;
-
-    @Column(name = "c")
+    @Column(name = "isDelete")
+    private boolean isDelete;
 
     public UserEntity() {
     }
 
     public UserEntity(int userid, String username, String email, String password, String firstname, String lastname,
             String role,
-            boolean isdeleted) {
+            boolean isDelete) {
         this.userid = userid;
         this.username = username;
         this.email = email;
@@ -43,7 +41,7 @@ public class UserEntity {
         this.firstname = firstname;
         this.lastname = lastname;
         this.role = role;
-        this.isdeleted = isdeleted;
+        this.isDelete = isDelete;
     }
 
     public int getUserid() {
@@ -103,11 +101,11 @@ public class UserEntity {
     }
 
     public boolean getIsDelete() {
-        return this.isdeleted;
+        return this.isDelete;
     }
 
-    public void setIsDeleted(boolean isdeleted) {
-        this.isdeleted = isdeleted;
+    public void setIsDelete(boolean isDelete) {
+        this.isDelete = isDelete;
     }
 
 }
