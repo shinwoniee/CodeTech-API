@@ -10,7 +10,7 @@ import jakarta.persistence.Table;
 public class ClassApplicationEntity {
 
     @Id
-    @Column(name = "classcode")
+    @Column(name = "classcode", unique = true)
     private String classcode;
 
     @Column(name = "classname")

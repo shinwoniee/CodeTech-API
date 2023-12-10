@@ -46,4 +46,26 @@ public class ClassApplicationService {
         // Implement logic to get class application entities
         return classRepository.findAll();
     }
+
+    public String joinClass(String classCode) {
+        // Add logic to join the class based on the class code
+        ClassApplicationEntity classEntity = classRepository.findById(classCode).orElse(null);
+    
+        if (classEntity != null) {
+            // Add logic to associate the user with the class if needed
+            // For now, let's assume a simple success message.
+            return "Joined class with code " + classCode + " successfully.";
+        } else {
+            return null; // Indicate that the class with the given code does not exist
+        }
+    }    
+
+    public ClassApplicationEntity getClassByCode(String classCode) {
+        return classRepository.findById(classCode).orElse(null);
+    }
+
+    public boolean classExists(String classCode) {
+        return classRepository.existsById(classCode);
+    }
+    
 }

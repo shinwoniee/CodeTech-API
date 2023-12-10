@@ -7,3 +7,4 @@ import org.springframework.stereotype.Repository;
 public interface ClassApplicationRepository extends JpaRepository<ClassApplicationEntity, String> {
     // Add any custom query methods if needed
 }
+
