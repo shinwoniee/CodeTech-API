@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import java.util.List;
 
 @CrossOrigin
-@RestController//where the mapping happens, when you want to check the output via browser
-@RequestMapping("/userGoals")// parent mapping
+@RestController
+@RequestMapping("/userGoals")
 public class UserGoalsController {
 
     @Autowired
