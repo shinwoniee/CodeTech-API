@@ -8,24 +8,20 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="tblGoals")
+@Table(name = "tblGoals")
 public class UserGoalsEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	
+
 	private int sid;
-	
-	@Column(name="goals")
+
+	@Column(name = "goals")
 	private String goals;
 
-    
-
 	public UserGoalsEntity() {
-		super();
 	}
 
 	public UserGoalsEntity(int sid, String goals) {
-		super();
 		this.sid = sid;
 		this.goals = goals;
 	}
@@ -45,5 +41,5 @@ public class UserGoalsEntity {
 	public void setUserGoals(String goals) {
 		this.goals = goals;
 	}
-	
+
 }

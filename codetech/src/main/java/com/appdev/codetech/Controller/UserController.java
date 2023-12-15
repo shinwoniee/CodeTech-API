@@ -1,6 +1,5 @@
 package com.appdev.codetech.Controller;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,17 +39,14 @@ public class UserController {
         String usernameOrEmail = credentials.get("usernameOrEmail");
         String password = credentials.get("password");
 
-        // For simplicity, assuming you have a UserService method for authentication
         AuthenticationResult result = userv.authenticateUser(usernameOrEmail, password);
 
         Map<String, Object> response = new HashMap<>();
 
         if (result.isSuccess()) {
-            // Authentication successful, include user information in the response
             response.put("user", result.getUser());
             return ResponseEntity.ok(response);
         } else {
-            // Authentication failed, return an appropriate error message
             if (result.isInvalidPassword()) {
                 response.put("error", "Invalid password");
             } else if (result.isUsernameOrEmailNotFound()) {
@@ -64,17 +60,35 @@ public class UserController {
     }
 
     @GetMapping("/checkEmail/{email}")
-    public ResponseEntity<Map<String, Boolean>> checkEmail(@PathVariable String email) {
-        boolean exists = userv.checkEmailExists(email);
-        Map<String, Boolean> response = Collections.singletonMap("exists", exists);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+    public ResponseEntity<Map<String, Object>> checkEmail(@PathVariable String email) {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            Map<String, Object> result = userv.checkEmailExists(email);
+            response.put("exists", result.get("exists"));
+            response.put("userid", result.get("userid"));
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.put("exists", false);
+            response.put("userid", null);
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @GetMapping("/checkUsername/{username}")
-    public ResponseEntity<Map<String, Boolean>> checkUsername(@PathVariable String username) {
-        boolean exists = userv.checkUsernameExists(username);
-        Map<String, Boolean> response = Collections.singletonMap("exists", exists);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+    public ResponseEntity<Map<String, Object>> checkUsername(@PathVariable String username) {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            Map<String, Object> result = userv.checkUsernameExists(username);
+            response.put("exists", result.get("exists"));
+            response.put("userid", result.get("userid"));
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.put("exists", false);
+            response.put("userid", null);
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @GetMapping("/getAllUsers")
@@ -96,22 +110,6 @@ public class UserController {
     public String deleteUser(@PathVariable int userid) {
         return userv.deleteUser(userid);
     }
-
-    @GetMapping("/getUserById/{userId}")
-public ResponseEntity<UserEntity> getUserById(@PathVariable int userId) {
-    try {
-        UserEntity user = userv.getUserById(userId);
-        if (user != null) {
-            return ResponseEntity.ok(user);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    } catch (Exception e) {
-        // Log the exception for debugging purposes
-        e.printStackTrace();
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-    }
-}
 
     @GetMapping("/print")
     public String printHello() {

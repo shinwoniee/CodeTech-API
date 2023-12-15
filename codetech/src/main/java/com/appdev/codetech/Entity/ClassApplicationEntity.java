@@ -1,16 +1,16 @@
-package com.example.demo;
+package com.appdev.codetech.Entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Entity
 @Table(name = "tblcreateclass")
 public class ClassApplicationEntity {
 
     @Id
-    @Column(name = "classcode")
+    @Column(name = "classcode", unique = true)
     private String classcode;
 
     @Column(name = "classname")

@@ -1,6 +1,8 @@
 package com.appdev.codetech.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -19,28 +21,32 @@ public class UserService {
         return urepo.save(user);
     }
 
-    public boolean checkEmailExists(String email) {
+    public Map<String, Object> checkEmailExists(String email) {
+        Map<String, Object> result = new HashMap<>();
         try {
             Optional<UserEntity> existingUser = urepo.findByEmail(email);
-            return existingUser.isPresent();
+            result.put("exists", existingUser.isPresent());
+            result.put("userid", existingUser.map(UserEntity::getUserid).orElse(null));
         } catch (Exception e) {
-            // Log the exception for debugging purposes
             e.printStackTrace();
-            // Return false or handle the exception as appropriate for your application
-            return false;
+            result.put("exists", false);
+            result.put("userid", null);
         }
+        return result;
     }
 
-    public boolean checkUsernameExists(String username) {
+    public Map<String, Object> checkUsernameExists(String username) {
+        Map<String, Object> result = new HashMap<>();
         try {
             Optional<UserEntity> existingUser = urepo.findByUsername(username);
-            return existingUser.isPresent();
+            result.put("exists", existingUser.isPresent());
+            result.put("userid", existingUser.map(UserEntity::getUserid).orElse(null));
         } catch (Exception e) {
-            // Log the exception for debugging purposes
             e.printStackTrace();
-            // Return false or handle the exception as appropriate for your application
-            return false;
+            result.put("exists", false);
+            result.put("userid", null);
         }
+        return result;
     }
 
     public List<UserEntity> getAllUsers() {
@@ -52,8 +58,8 @@ public class UserService {
         try {
             user = urepo.findById(userid).get();
             user.setUsername(newUserEntityDetails.getUsername());
-            user.setEmail(newUserEntityDetails.getEmail());
             user.setPassword(newUserEntityDetails.getPassword());
+            user.setEmail(newUserEntityDetails.getEmail());
             user.setFirstname(newUserEntityDetails.getFirstname());
             user.setLastname(newUserEntityDetails.getLastname());
             user.setRole(newUserEntityDetails.getRole());
@@ -71,8 +77,8 @@ public class UserService {
         try {
             user = urepo.findById(userid).get();
             user.setUsername(null);
-            user.setEmail(null);
             user.setPassword(null);
+            user.setEmail(null);
             user.setFirstname(null);
             user.setLastname(null);
             user.setRole(null);
@@ -89,7 +95,6 @@ public class UserService {
         try {
             Optional<UserEntity> user;
 
-            // Check if the provided usernameOrEmail is a valid email
             if (usernameOrEmail.contains("@")) {
                 user = urepo.findByEmail(usernameOrEmail);
             } else {
@@ -104,10 +109,8 @@ public class UserService {
                 boolean usernameOrEmailNotFound = false;
 
                 if (user.isPresent()) {
-                    // User found, but password is incorrect
                     invalidPassword = true;
                 } else {
-                    // User not found
                     usernameOrEmailNotFound = true;
                 }
 
@@ -130,9 +133,4 @@ public class UserService {
 
         return msg;
     }
-
-    public UserEntity getUserById(int userId) {
-        return urepo.findById(userId).orElse(null);
-    }
-
 }
