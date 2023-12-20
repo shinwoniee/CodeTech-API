@@ -106,7 +106,7 @@ public class UserController {
         return userv.removeUser(userid);
     }
 
-    @DeleteMapping("/deleteUser/{empno}")
+    @DeleteMapping("/deleteUser/{userid}")
     public String deleteUser(@PathVariable int userid) {
         return userv.deleteUser(userid);
     }
