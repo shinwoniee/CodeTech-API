@@ -41,6 +41,23 @@ public class UserGoalsService {
 			return srepo.save(goals);
 		}
 	}
+
+	public UserGoalsEntity updateGoalStatus(int sid, UserGoalsEntity newGoalStatus) {
+		try {
+			// Search ID number
+			UserGoalsEntity status = srepo.findById(sid).orElseThrow(() -> new NoSuchElementException("Status " + sid + " does not exist!"));
+	
+			// Update status
+			status.setGoalStatus(newGoalStatus.getGoalStatus());
+	
+			// Save the updated status entity
+			return srepo.save(status);
+		} catch (Exception ex) {
+			// Handle exceptions if needed
+			ex.printStackTrace(); // Log the exception or handle it accordingly
+			return null; // Consider returning a meaningful response in case of failure
+		}
+	}
 	
 	//Delete
 	public String deleteUserGoals(int sid) {
