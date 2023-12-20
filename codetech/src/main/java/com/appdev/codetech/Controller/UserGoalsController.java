@@ -1,11 +1,12 @@
 package com.appdev.codetech.Controller;
 
+import com.appdev.codetech.Entity.CreateGoalRequest;
 import com.appdev.codetech.Entity.UserGoalsEntity;
 import com.appdev.codetech.Service.UserGoalsService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.bind.annotation.CrossOrigin;
 
 import java.util.List;
 
@@ -18,9 +19,14 @@ public class UserGoalsController {
     UserGoalsService sserv;
 
     // Create a student record
-    @PostMapping("/insertUserGoals") // If you are inserting
-    public UserGoalsEntity insertUserGoals(@RequestBody UserGoalsEntity goals) {// Request body is Annotation for??
-        return sserv.insertUserGoals(goals);
+    @PostMapping("/insertUserGoals")
+    public UserGoalsEntity insertUserGoals(@RequestBody CreateGoalRequest createGoalRequest) {
+    UserGoalsEntity goals = createGoalRequest.getGoals();
+    String course = createGoalRequest.getCourse();
+    goals.setGoalStatus("incomplete");
+    goals.setGoalCourse(course);
+    UserGoalsEntity savedGoals = sserv.insertUserGoals(goals);
+    return savedGoals;
     }
 
     // Read
@@ -33,6 +39,11 @@ public class UserGoalsController {
     @PutMapping("/updateUserGoals")
     public UserGoalsEntity updateUserGoals(@RequestParam int sid, @RequestBody UserGoalsEntity newUserGoals) {
         return sserv.updateUserGoals(sid, newUserGoals);
+    }
+
+    @PutMapping("/updateGoalStatus")
+    public UserGoalsEntity updateGoalStatus(@RequestParam int sid, @RequestBody UserGoalsEntity newGoalStatus) {
+        return sserv.updateGoalStatus(sid, newGoalStatus);
     }
 
     // Delete
