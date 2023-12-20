@@ -1,8 +1,7 @@
 package com.appdev.codetech.Entity;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -11,6 +10,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 @Entity
 @Table(name = "tblticket")
@@ -30,7 +31,8 @@ public class TicketEntity {
     @Column(name = "status")
     private String status;
     @Column(name = "timestamp")
-    private LocalDateTime timestamp;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date timestamp;
     @Column(name = "isDelete")
     private boolean isDelete;
 
@@ -42,7 +44,7 @@ public class TicketEntity {
     }
 
     public TicketEntity(int ticketid, String title, String email, String category, String details, String status,
-            LocalDateTime timestamp, boolean isDelete, UserEntity user) {
+            Date timestamp, boolean isDelete, UserEntity user) {
         this.ticketid = ticketid;
         this.title = title;
         this.email = email;
@@ -102,11 +104,11 @@ public class TicketEntity {
         this.status = status;
     }
 
-    public LocalDateTime getTimestamp() {
+    public Date getTimestamp() {
         return this.timestamp;
     }
 
-    public void setTimestamp(LocalDateTime timestamp) {
+    public void setTimestamp(Date timestamp) {
         this.timestamp = timestamp;
     }
 

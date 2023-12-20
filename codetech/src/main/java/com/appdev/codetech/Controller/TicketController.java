@@ -34,6 +34,11 @@ public class TicketController {
         return tserv.getAllTickets();
     }
 
+    @GetMapping("/getTickets")
+    public List<TicketEntity> getTickets(@RequestParam int userid) {
+        return tserv.getTicketsByUserId(userid);
+    }
+
     @PutMapping("/updateTicket")
     public TicketEntity updateTicket(@RequestParam int ticketid, @RequestBody TicketEntity newTicketEntity) {
         return tserv.updateTicket(ticketid, newTicketEntity);

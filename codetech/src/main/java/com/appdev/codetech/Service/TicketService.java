@@ -24,6 +24,8 @@ public class TicketService {
     public TicketEntity insertTicket(TicketEntity ticket) {
         int userId = ticket.getUser().getUserid();
 
+        System.err.println("userid: " + userId);
+
         UserEntity user = urepo.findById(userId)
                 .orElseThrow(() -> {
                     return new EntityNotFoundException("User not found");
@@ -36,6 +38,12 @@ public class TicketService {
 
     public List<TicketEntity> getAllTickets() {
         return trepo.findAll();
+    }
+
+    public List<TicketEntity> getTicketsByUserId(int userid) {
+        UserEntity user = urepo.findById(userid)
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+        return trepo.findByUser(user);
     }
 
     public TicketEntity updateTicket(int ticketid, TicketEntity newTicketEntityDetails) {
