@@ -3,6 +3,8 @@ package com.appdev.codetech.Entity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -22,14 +24,27 @@ public class ClassApplicationEntity {
         super();
     }
 
-    public ClassApplicationEntity(String classname, String classdescription, String classcode) {
+    @ManyToOne
+    @JoinColumn(name = "userid")
+    private UserEntity user;
+
+    public ClassApplicationEntity(String classcode, String classname, String classdescription, UserEntity user) {
+        this.classcode = classcode;
         this.classname = classname;
         this.classdescription = classdescription;
+        this.user = user;
+    }
+
+    public String getClasscode() {
+        return this.classcode;
+    }
+
+    public void setClasscode(String classcode) {
         this.classcode = classcode;
     }
 
     public String getClassname() {
-        return classname;
+        return this.classname;
     }
 
     public void setClassname(String classname) {
@@ -37,19 +52,19 @@ public class ClassApplicationEntity {
     }
 
     public String getClassdescription() {
-        return classdescription;
+        return this.classdescription;
     }
 
     public void setClassdescription(String classdescription) {
         this.classdescription = classdescription;
     }
 
-    public String getClasscode() {
-        return classcode;
+    public UserEntity getUser() {
+        return this.user;
     }
 
-    public void setClasscode(String classcode) {
-        this.classcode = classcode;
+    public void setUser(UserEntity user) {
+        this.user = user;
     }
 
 }

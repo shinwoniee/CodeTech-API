@@ -3,7 +3,6 @@ package com.appdev.codetech.Controller;
 import com.appdev.codetech.Entity.CreateGoalRequest;
 import com.appdev.codetech.Entity.UserGoalsEntity;
 import com.appdev.codetech.Service.UserGoalsService;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -21,12 +20,12 @@ public class UserGoalsController {
     // Create a student record
     @PostMapping("/insertUserGoals")
     public UserGoalsEntity insertUserGoals(@RequestBody CreateGoalRequest createGoalRequest) {
-    UserGoalsEntity goals = createGoalRequest.getGoals();
-    String course = createGoalRequest.getCourse();
-    goals.setGoalStatus("incomplete");
-    goals.setGoalCourse(course);
-    UserGoalsEntity savedGoals = sserv.insertUserGoals(goals);
-    return savedGoals;
+        UserGoalsEntity goals = createGoalRequest.getGoals();
+        String course = createGoalRequest.getCourse();
+        goals.setGoalStatus("incomplete");
+        goals.setGoalCourse(course);
+        UserGoalsEntity savedGoals = sserv.insertUserGoals(goals);
+        return savedGoals;
     }
 
     // Read

@@ -96,4 +96,8 @@ public class TicketService {
 
         return msg;
     }
+
+    public long getTotalTickets() {
+        return trepo.count();
+    }
 }

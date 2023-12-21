@@ -133,4 +133,8 @@ public class UserService {
 
         return msg;
     }
+
+    public long getCountByRole(String role) {
+        return urepo.countByRole(role);
+    }
 }
