@@ -4,10 +4,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.appdev.codetech.Entity.ClassApplicationEntity;
+import com.appdev.codetech.Entity.UserEntity;
 import com.appdev.codetech.Repository.ClassApplicationRepository;
+import com.appdev.codetech.Repository.UserRepository;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+
+import javax.persistence.EntityNotFoundException;
 
 @Service
 public class ClassApplicationService {
@@ -15,8 +19,19 @@ public class ClassApplicationService {
     @Autowired
     private ClassApplicationRepository classRepository;
 
+    @Autowired
+    private UserRepository urepo;
+
     public ClassApplicationEntity insertClassApplicationEntity(ClassApplicationEntity newClass) {
-        // Add validation logic if needed
+        int userId = newClass.getUser().getUserid();
+
+        System.err.println("userid: " + userId);
+
+        UserEntity user = urepo.findById(userId)
+                .orElseThrow(() -> {
+                    return new EntityNotFoundException("User not found");
+                });
+        newClass.setUser(user);
         return classRepository.save(newClass);
     }
 

@@ -20,13 +20,13 @@ public class ClassApplicationEntity {
     @Column(name = "classdescription")
     private String classdescription;
 
-    public ClassApplicationEntity() {
-        super();
-    }
-
     @ManyToOne
     @JoinColumn(name = "userid")
     private UserEntity user;
+
+    public ClassApplicationEntity() {
+        super();
+    }
 
     public ClassApplicationEntity(String classcode, String classname, String classdescription, UserEntity user) {
         this.classcode = classcode;
