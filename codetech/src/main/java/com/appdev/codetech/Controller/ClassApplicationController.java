@@ -18,6 +18,11 @@ public class ClassApplicationController {
     @Autowired
     private ClassApplicationService sserv;
 
+    @GetMapping("/getClassbyId")
+    public List<ClassApplicationEntity> getClassesByUserId(@RequestParam int userid) {
+        return sserv.getClassesByUserId(userid);
+    }
+
     @PostMapping("/insertClass")
     public ResponseEntity<Object> insertClassApplicationEntity(@RequestBody ClassApplicationEntity classEntity) {
         String classCode = classEntity.getClasscode();

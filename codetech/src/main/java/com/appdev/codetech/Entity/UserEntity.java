@@ -28,6 +28,17 @@ public class UserEntity {
     @Column(name = "isDelete")
     private boolean isDelete;
 
+    // @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    // private List<ClassApplicationEntity> classes;
+
+    // public List<ClassApplicationEntity> getClasses() {
+    // return classes;
+    // }
+
+    // public void setClasses(List<ClassApplicationEntity> classes) {
+    // this.classes = classes;
+    // }
+
     public UserEntity() {
     }
 

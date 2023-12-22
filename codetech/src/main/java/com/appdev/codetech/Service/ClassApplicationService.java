@@ -22,6 +22,12 @@ public class ClassApplicationService {
     @Autowired
     private UserRepository urepo;
 
+    public List<ClassApplicationEntity> getClassesByUserId(int userid) {
+        UserEntity user = urepo.findById(userid)
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+        return classRepository.findByUser(user);
+    }
+
     public ClassApplicationEntity insertClassApplicationEntity(ClassApplicationEntity newClass) {
         int userId = newClass.getUser().getUserid();
 
