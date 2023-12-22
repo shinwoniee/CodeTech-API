@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.appdev.codetech.Entity.TicketEntity;
 import com.appdev.codetech.Entity.UserEntity;
@@ -11,4 +12,9 @@ import com.appdev.codetech.Entity.UserEntity;
 @Repository
 public interface TicketRepository extends JpaRepository<TicketEntity, Integer> {
     List<TicketEntity> findByUser(UserEntity user);
+
+    long countByUser(UserEntity user);
+
+    @Transactional
+    void deleteByUser(UserEntity user);
 }

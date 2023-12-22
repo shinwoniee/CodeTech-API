@@ -22,7 +22,15 @@ public class TicketService {
     private UserRepository urepo;
 
     public TicketEntity insertTicket(TicketEntity ticket) {
-        int userId = ticket.getUser().getUserid();
+
+        UserEntity users = ticket.getUser();
+
+        if (users == null) {
+            // Handle the case where user is null, perhaps by throwing an exception
+            throw new IllegalArgumentException("User cannot be null");
+        }
+
+        int userId = users.getUserid();
 
         System.err.println("userid: " + userId);
 

@@ -1,11 +1,17 @@
 package com.appdev.codetech.Entity;
 
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "tbluser")
@@ -28,23 +34,19 @@ public class UserEntity {
     @Column(name = "isDelete")
     private boolean isDelete;
 
-    // @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    // private List<ClassApplicationEntity> classes;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private List<TicketEntity> tickets;
 
-    // public List<ClassApplicationEntity> getClasses() {
-    // return classes;
-    // }
-
-    // public void setClasses(List<ClassApplicationEntity> classes) {
-    // this.classes = classes;
-    // }
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private List<ClassApplicationEntity> classes;
 
     public UserEntity() {
     }
 
     public UserEntity(int userid, String username, String email, String password, String firstname, String lastname,
-            String role,
-            boolean isDelete) {
+            String role, boolean isDelete, List<TicketEntity> tickets, List<ClassApplicationEntity> classes) {
         this.userid = userid;
         this.username = username;
         this.email = email;
@@ -53,6 +55,8 @@ public class UserEntity {
         this.lastname = lastname;
         this.role = role;
         this.isDelete = isDelete;
+        this.tickets = tickets;
+        this.classes = classes;
     }
 
     public int getUserid() {
@@ -111,12 +115,32 @@ public class UserEntity {
         this.role = role;
     }
 
+    public boolean isIsDelete() {
+        return this.isDelete;
+    }
+
     public boolean getIsDelete() {
         return this.isDelete;
     }
 
     public void setIsDelete(boolean isDelete) {
         this.isDelete = isDelete;
+    }
+
+    public List<TicketEntity> getTickets() {
+        return this.tickets;
+    }
+
+    public void setTickets(List<TicketEntity> tickets) {
+        this.tickets = tickets;
+    }
+
+    public List<ClassApplicationEntity> getClasses() {
+        return this.classes;
+    }
+
+    public void setClasses(List<ClassApplicationEntity> classes) {
+        this.classes = classes;
     }
 
 }

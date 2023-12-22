@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.appdev.codetech.Entity.ClassApplicationEntity;
 import com.appdev.codetech.Entity.UserEntity;
@@ -13,4 +14,9 @@ public interface ClassApplicationRepository extends JpaRepository<ClassApplicati
     // Add any custom query methods if needed
 
     List<ClassApplicationEntity> findByUser(UserEntity user);
+
+    long countByUser(UserEntity user);
+
+    @Transactional
+    void deleteByUser(UserEntity user);
 }
