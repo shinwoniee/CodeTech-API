@@ -1,5 +1,6 @@
 package com.appdev.codetech.Controller;
 
+import java.security.SecureRandom;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.appdev.codetech.Entity.UserEntity;
 import com.appdev.codetech.Service.AuthenticationResult;
 import com.appdev.codetech.Service.UserService;
+import com.appdev.codetech.Service.VerificationCodeService;
 
 @RestController
 @CrossOrigin
@@ -29,9 +31,68 @@ public class UserController {
     @Autowired
     UserService userv;
 
-    @PostMapping(("/insertUser"))
+    @Autowired
+    private VerificationCodeService verificationCodeService;
+
+    private String generateVerificationCode() {
+        // Generate a random alphanumeric verification code
+        String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        SecureRandom random = new SecureRandom();
+        StringBuilder code = new StringBuilder();
+
+        for (int i = 0; i < 6; i++) {
+            code.append(characters.charAt(random.nextInt(characters.length())));
+        }
+
+        return code.toString();
+    }
+
+    @PostMapping("/sendVerificationCode")
+    public ResponseEntity<String> sendVerificationCode(@RequestParam String email) {
+        try {
+            // You can add additional validation for the email if needed
+
+            // Generate verification code
+            String verificationCode = generateVerificationCode();
+
+            // Store the verification code in the cache
+            verificationCodeService.storeVerificationCode(email, verificationCode);
+
+            // Send verification code to user's email
+            userv.sendVerificationCode(email, verificationCode);
+
+            // Return the verification code to the frontend
+            return ResponseEntity.ok(verificationCode);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Failed to send verification code. Please try again.");
+        }
+    }
+
+    @PostMapping("/verifyCode")
+    public ResponseEntity<String> verifyCode(@RequestParam String email, @RequestParam String enteredCode) {
+        try {
+            // Retrieve the stored verification code from the cache
+            String storedCode = verificationCodeService.getVerificationCode(email);
+
+            // Check if the entered code matches the stored code
+            if (enteredCode.equals(storedCode)) {
+                // Code verification successful
+                return ResponseEntity.ok("success");
+            } else {
+                // Code verification failed
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Incorrect verification code");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Failed to verify code. Please try again.");
+        }
+    }
+
+    @PostMapping("/insertUser")
     public UserEntity insertUser(@RequestBody UserEntity user) {
-        return userv.insertUser(user);
+        UserEntity savedUser = userv.insertUser(user);
+        return savedUser;
     }
 
     @PostMapping("/authenticate")
@@ -114,5 +175,16 @@ public class UserController {
     @GetMapping("/print")
     public String printHello() {
         return "hellooo";
+    }
+
+    @GetMapping("/getUser/{userid}")
+    public ResponseEntity<UserEntity> getUserByUserId(@PathVariable int userid) {
+        try {
+            UserEntity user = userv.getUserByUserId(userid);
+            return new ResponseEntity<>(user, HttpStatus.OK);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(null);
+        }
     }
 }

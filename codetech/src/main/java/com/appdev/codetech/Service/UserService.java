@@ -5,17 +5,23 @@ import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
+
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 
 import org.springframework.beans.factory.annotation.Autowired;
-
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.appdev.codetech.Entity.ClassApplicationEntity;
 import com.appdev.codetech.Entity.TicketEntity;
 import com.appdev.codetech.Entity.UserEntity;
+import com.appdev.codetech.Entity.VerificationCode;
 import com.appdev.codetech.Repository.ClassApplicationRepository;
 import com.appdev.codetech.Repository.TicketRepository;
 import com.appdev.codetech.Repository.UserRepository;
+import com.appdev.codetech.Repository.VerificationCodeRepository;
 
 @Service
 public class UserService {
@@ -25,8 +31,68 @@ public class UserService {
     TicketRepository trepo;
     @Autowired
     ClassApplicationRepository crepo;
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
+    @Autowired
+    private JavaMailSender javaMailSender;
+
+    // @Autowired
+    // private VerificationCodeRepository codeRepository;
+
+    // public void storeVerificationCode(String email, String code) {
+    // VerificationCode verificationCode = new VerificationCode(email, code);
+    // codeRepository.save(verificationCode);
+    // }
+
+    // public String getVerificationCode(String email) {
+    // Optional<VerificationCode> optionalCode = codeRepository.findById(email);
+    // return optionalCode.map(VerificationCode::getCode).orElse(null);
+    // }
+
+    public class VerificationCodeService {
+
+        // Assuming you have a cache implementation, you can use a Map for simplicity
+        private Map<String, String> verificationCodeCache = new HashMap<>();
+
+        // Other methods...
+
+        public void storeVerificationCode(String email, String code) {
+            // Store the verification code in the cache
+            verificationCodeCache.put(email, code);
+        }
+
+        public String getVerificationCode(String email) {
+            // Retrieve the verification code from the cache
+            return verificationCodeCache.get(email);
+        }
+    }
+
+    public UserEntity getUserByUserId(int userid) {
+        Optional<UserEntity> userOptional = urepo.findById(userid);
+        return userOptional.orElse(null);
+    }
+
+    public String sendVerificationCode(String to, String verificationCode) {
+        try {
+            // Send verification code to user's email
+            SimpleMailMessage message = new SimpleMailMessage();
+            message.setFrom("shannnandreibanana@gmail.com"); // replace with your email
+            message.setTo(to);
+            message.setSubject("Verification Code");
+            message.setText("Your verification code is: " + verificationCode);
+
+            javaMailSender.send(message);
+
+            // Return the verification code
+            return verificationCode;
+        } catch (Exception e) {
+            // Handle exceptions, log errors, etc.
+            throw new RuntimeException("Failed to send verification code. Please try again.", e);
+        }
+    }
 
     public UserEntity insertUser(UserEntity user) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         return urepo.save(user);
     }
 
@@ -67,7 +133,7 @@ public class UserService {
         try {
             user = urepo.findById(userid).get();
             user.setUsername(newUserEntityDetails.getUsername());
-            user.setPassword(newUserEntityDetails.getPassword());
+            user.setPassword(passwordEncoder.encode(newUserEntityDetails.getPassword()));
             user.setEmail(newUserEntityDetails.getEmail());
             user.setFirstname(newUserEntityDetails.getFirstname());
             user.setLastname(newUserEntityDetails.getLastname());
@@ -91,7 +157,7 @@ public class UserService {
                 user = urepo.findByUsername(usernameOrEmail);
             }
 
-            if (user.isPresent() && user.get().getPassword().equals(password)) {
+            if (user.isPresent() && passwordEncoder.matches(password, user.get().getPassword())) {
                 AuthenticationResult result = new AuthenticationResult(true, false, false, user.get());
                 return result;
             } else {
