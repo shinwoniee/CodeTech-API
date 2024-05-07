@@ -26,6 +26,7 @@ public class TicketController {
 
     @PostMapping(("/insertTicket"))
     public TicketEntity insertTicket(@RequestBody TicketEntity ticket) {
+
         return tserv.insertTicket(ticket);
     }
 
